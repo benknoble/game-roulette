@@ -57,3 +57,9 @@ func TestRandSeedTen(t *testing.T) {
 		}
 	}
 }
+
+func TestRandAsFloater(t *testing.T) {
+	var f Floater = rand.New(rand.NewSource(1))
+	c := FairCoin{}
+	c.GenerateRandom(f)
+}
