@@ -98,3 +98,15 @@ func TestBiasedCoin(t *testing.T) {
 	}
 }
 
+func TestFairDie(t *testing.T) {
+	d := NewFairDie(10)
+	var f Floater = newMockFloater()
+	for i := 0; i <= 10; i++ {
+		face := d.GenerateRandom(f)
+		result := i
+		if face != result {
+			t.Errorf("Expected %v, got %v", result, face)
+		}
+	}
+}
+

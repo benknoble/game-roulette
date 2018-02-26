@@ -56,4 +56,21 @@ func (c BiasedCoin) GenerateRandom(f Floater) int {
 	return Tails
 }
 
+// A FairDie gives an integer in the range [1,number of sides] as a
+// RandomGenerator
+type FairDie struct {
+	sides int
+}
+
+// NewFairDie creates a new FairDie with n sides
+func NewFairDie(n int) FairDie {
+	return FairDie{n}
+}
+
+// GenerateRandom an integer in the range [1,number of sides on the die]
+func (d FairDie) GenerateRandom(f Floater) int {
+	x := f.Float64()
+	return int(math.Floor(x * float64(d.sides)))
+}
+
 }
