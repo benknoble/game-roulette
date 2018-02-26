@@ -81,3 +81,20 @@ func TestFairCoin(t *testing.T) {
 	}
 }
 
+func TestBiasedCoin(t *testing.T) {
+	c := NewBiasedCoin(.3)
+	var f Floater = newMockFloater()
+	for i := 0; i <= 10; i++ {
+		heads := c.GenerateRandom(f)
+		var result int
+		if i < 3 {
+			result = Heads
+		} else {
+			result = Tails
+		}
+		if heads != result {
+			t.Errorf("Expected %v, got %v", result, heads)
+		}
+	}
+}
+

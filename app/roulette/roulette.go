@@ -33,4 +33,27 @@ func (c FairCoin) GenerateRandom(f Floater) int {
 	} // x >= 0.5
 	return Tails
 }
+
+// A BiasedCoin is like a FairCoin, only heads and tails have (possibly)
+// differing probabilities of showing
+type BiasedCoin struct {
+	headsProbability float64
+}
+
+// NewBiasedCoin creates a BiasedCoin with probability `headsProbability` of a
+// heads showing
+func NewBiasedCoin(headsProbability float64) BiasedCoin {
+	return BiasedCoin{headsProbability}
+}
+
+// GenerateRandom a Heads or a Tails, like flipping a coin, only this flip is
+// biased after the coin
+func (c BiasedCoin) GenerateRandom(f Floater) int {
+	x := f.Float64()
+	if x < c.headsProbability {
+		return Heads
+	} // x >= c.headsProbability
+	return Tails
+}
+
 }
