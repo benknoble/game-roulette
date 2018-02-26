@@ -63,3 +63,21 @@ func TestRandAsFloater(t *testing.T) {
 	c := FairCoin{}
 	c.GenerateRandom(f)
 }
+
+func TestFairCoin(t *testing.T) {
+	c := FairCoin{}
+	var f Floater = newMockFloater()
+	for i := 0; i <= 10; i++ {
+		heads := c.GenerateRandom(f)
+		var result int
+		if i < 5 {
+			result = Heads
+		} else {
+			result = Tails
+		}
+		if heads != result {
+			t.Errorf("Expected %v, got %v", result, heads)
+		}
+	}
+}
+
