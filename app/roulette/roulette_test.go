@@ -5,6 +5,36 @@ import (
 	"testing"
 )
 
+type mockFloater struct {
+	index int
+	vals  []float64
+}
+
+func newMockFloater() *mockFloater {
+	fs := []float64{
+		0.0,
+		0.1,
+		0.2,
+		0.3,
+		0.4,
+		0.5,
+		0.6,
+		0.7,
+		0.8,
+		0.9,
+		1.0,
+	}
+	return &mockFloater{0, fs}
+}
+
+func (f *mockFloater) Float64() float64 {
+	if f.index >= len(f.vals) {
+		f.index = 0
+	}
+	defer func() { f.index++; return }()
+	return f.vals[f.index]
+}
+
 func TestRandSeedTen(t *testing.T) {
 	r := rand.New(rand.NewSource(1))
 	// first ten values of Float64
