@@ -15,3 +15,7 @@
 
 # Binaries
 game-roulette
+
+# Ignore the .env file, used by Heroku for local builds
+# (https://devcenter.heroku.com/articles/heroku-local)
+.env
