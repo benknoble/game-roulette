@@ -23,7 +23,7 @@ func TestRandSeedTen(t *testing.T) {
 	for i := range ten {
 		test := r.Float64()
 		if test != ten[i] {
-			t.Error("New Random seeded with 1 gave (%v), expected (%v)", test, ten[i])
+			t.Errorf("New Random seeded with 1 gave (%v), expected (%v)", test, ten[i])
 		}
 	}
 }
