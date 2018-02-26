@@ -1,6 +1,7 @@
 package roulette
 
 import (
+	"math"
 	"math/rand"
 	"testing"
 )
@@ -110,3 +111,73 @@ func TestFairDie(t *testing.T) {
 	}
 }
 
+func TestLoadedDie(t *testing.T) {
+	_, err := NewLoadedDie(4, []float64{0.1, 0.3, 0.6})
+	if err == nil {
+		t.Error("Expected error with missing dies, got nil")
+	}
+	_, err = NewLoadedDie(3, []float64{0.1, 0.3, 0.6})
+	if err != nil {
+		t.Errorf("Got error on creation: %v", err)
+	}
+}
+
+func TestVoseInit(t *testing.T) {
+	d, err := NewLoadedDie(3, []float64{0.1, 0.3, 0.6})
+	if err != nil {
+		t.Errorf("Got error on creation: %v", err)
+	}
+	alias, prob := voseInit(d)
+	expectedAlias := []int{2, 2, 0}
+	expectedProb := []float64{0.3, 0.9, 1}
+	if !equals(alias, expectedAlias) && !equalsFloat64s(prob, expectedProb) {
+		t.Errorf("Expected (%v,%v), got (%v,%v)", expectedAlias, expectedProb, alias, prob)
+	}
+
+	d, err = NewLoadedDie(7, []float64{1.0 / 8.0, 1.0 / 5.0, 1.0 / 10.0, 1.0 / 4.0, 1.0 / 10.0, 1.0 / 10.0, 1.0 / 8.0})
+	if err != nil {
+		t.Errorf("Got error on creation: %v", err)
+	}
+	alias, prob = voseInit(d)
+	expectedAlias = []int{1, 0, 3, 1, 3, 3, 3}
+	expectedProb = []float64{7.0 / 8.0, 1.0, 7.0 / 10.0, 29.0 / 40.0, 7.0 / 10.0, 7.0 / 10.0, 7.0 / 8.0}
+	if !equals(alias, expectedAlias) && !equalsFloat64s(prob, expectedProb) {
+		t.Errorf("Expected (%v,%v), got (%v,%v)", expectedAlias, expectedProb, alias, prob)
+	}
+}
+
+func TestPop(t *testing.T) {
+	stack := []int{1, 2, 3}
+	head, tail := pop(stack)
+	expHead, expTail := 1, []int{2, 3}
+	if head != expHead || !equals(tail, expTail) {
+		t.Errorf("Expected (%v,%v), got (%v,%v)", expHead, expTail, head, tail)
+	}
+}
+
+func TestLoadedDieGenerateRandom(t *testing.T) {
+}
+
+func equals(a []int, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func equalsFloat64s(a []float64, b []float64) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if math.Abs(a[i]-b[i]) > .0000001 {
+			return false
+		}
+	}
+	return true
+}

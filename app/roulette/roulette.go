@@ -1,5 +1,9 @@
 package roulette
 
+import (
+	"errors"
+	"math"
+)
 
 // A Floater can provide a float64 on each invocation of it's method
 type Floater interface {
@@ -73,4 +77,83 @@ func (d FairDie) GenerateRandom(f Floater) int {
 	return int(math.Floor(x * float64(d.sides)))
 }
 
+// A LoadedDie gives an integer in the range [1,number of sides] as a
+// RandomGenerator, but respects the probability given to each side
+type LoadedDie struct {
+	sides         int
+	probabilities []float64
+}
+
+// NewLoadedDie creates a new LoadedDie with n sides, where side i has
+// probability ps[i] of showing
+func NewLoadedDie(n int, ps []float64) (LoadedDie, error) {
+	if len(ps) != n {
+		return LoadedDie{}, ErrorSides
+	}
+	return LoadedDie{n, ps}, nil
+}
+
+// GenerateRandom an integer in the range [1,number of sides] respecting the
+// weight's of the dice
+//
+// Implented based on the alias method described here:
+// http://www.keithschwarz.com/darts-dice-coins/
+func (d LoadedDie) GenerateRandom(f Floater) int {
+	alias, prob := voseInit(d)
+	i := NewFairDie(d.sides).GenerateRandom(f)
+	flip := NewBiasedCoin(prob[i]).GenerateRandom(f)
+	if flip == Heads {
+		return i
+	} //flip == Tails
+	return alias[i]
+}
+
+func voseInit(d LoadedDie) (alias []int, prob []float64) {
+	alias, prob = make([]int, d.sides), make([]float64, d.sides)
+	var probabilities []float64
+	copy(d.probabilities, probabilities)
+	probabilities = d.probabilities[:]
+	for i := range probabilities {
+		probabilities[i] = probabilities[i] * float64(d.sides)
+	}
+	var small, large []int
+	for i, p := range probabilities {
+		scaledP := p
+		if scaledP < 1 {
+			small = append(small, i)
+		} else {
+			large = append(large, i)
+		}
+	}
+	for len(small) != 0 && len(large) != 0 {
+		var l, g int
+		l, small = pop(small)
+		g, large = pop(large)
+		prob[l] = probabilities[l]
+		alias[l] = g
+		probabilities[g] = probabilities[g] + probabilities[l] - 1
+		if probabilities[g] < 1 {
+			small = append(small, g)
+		} else {
+			large = append(large, g)
+		}
+	}
+	for len(large) != 0 {
+		var g int
+		g, large = pop(large)
+		prob[g] = 1
+	}
+	for len(small) != 0 {
+		var l int
+		l, small = pop(small)
+		prob[l] = 1
+	}
+	return alias, prob
+}
+
+func pop(s []int) (head int, tail []int) {
+	head = s[0]
+	copy(tail, s[1:])
+	tail = s[1:len(s)]
+	return
 }
