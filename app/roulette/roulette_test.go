@@ -149,7 +149,7 @@ func TestVoseInit(t *testing.T) {
 func TestPop(t *testing.T) {
 	stack := []int{1, 2, 3}
 	head, tail := pop(stack)
-	expHead, expTail := 1, []int{2, 3}
+	expHead, expTail := 3, []int{1, 2}
 	if head != expHead || !equals(tail, expTail) {
 		t.Errorf("Expected (%v,%v), got (%v,%v)", expHead, expTail, head, tail)
 	}

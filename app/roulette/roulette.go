@@ -152,8 +152,10 @@ func voseInit(d LoadedDie) (alias []int, prob []float64) {
 }
 
 func pop(s []int) (head int, tail []int) {
-	head = s[0]
-	copy(tail, s[1:])
-	tail = s[1:len(s)]
+	len := len(s)
+	if len != 0 {
+		head = s[len-1]
+		tail = s[:len-1]
+	}
 	return
 }
