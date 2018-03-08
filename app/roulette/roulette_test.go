@@ -156,6 +156,7 @@ func TestPop(t *testing.T) {
 }
 
 func TestLoadedDieGenerateRandom(t *testing.T) {
+	t.Errorf("Not yet implemented")
 }
 
 func equals(a []int, b []int) bool {
