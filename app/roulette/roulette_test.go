@@ -175,7 +175,7 @@ func equalsFloat64s(a []float64, b []float64) bool {
 		return false
 	}
 	for i := range a {
-		if math.Abs(a[i]-b[i]) > .0000001 {
+		if math.Abs(a[i]-b[i]) > math.SmallestNonzeroFloat64 {
 			return false
 		}
 	}
