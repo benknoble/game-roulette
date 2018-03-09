@@ -155,6 +155,48 @@ func TestPop(t *testing.T) {
 }
 
 func TestLoadedDieGenerateRandom(t *testing.T) {
+	// alias := []int{2, 2, 0}
+	// prob := []float64{0.3, 0.9, 1}
+	d, err := NewLoadedDie(3, []float64{0.1, 0.3, 0.6})
+	f := newMockFloater()
+	if err != nil {
+		t.Errorf("Got error on creation: %v", err)
+	}
+	// i := 1 // f => 0.0, so 1d3 => 1
+	// flip := Heads // f => 0.1, prob[i-1] = 0.3
+	expected := 1
+	res := d.GenerateRandom(f)
+	if res != expected {
+		t.Errorf("Expected %v, got %v", expected, res)
+	}
+	// i := 1 // f => 0.2, so 1d3 => 1
+	// flip := Tails // f => 0.3, prob[i-1] = 0.3
+	expected = 3
+	res = d.GenerateRandom(f)
+	if res != expected {
+		t.Errorf("Expected %v, got %v", expected, res)
+	}
+	// i := 2 // f => 0.4, so 1d3 => 2
+	// flip := Heads // f => 0.5, prob[i-1] = 0.9
+	expected = 2
+	res = d.GenerateRandom(f)
+	if res != expected {
+		t.Errorf("Expected %v, got %v", expected, res)
+	}
+	// i := 2 // f => 0.6, so 1d3 => 2
+	// flip := Heads // f => 0.7, prob[i-1] = 0.9
+	expected = 2
+	res = d.GenerateRandom(f)
+	if res != expected {
+		t.Errorf("Expected %v, got %v", expected, res)
+	}
+	// i := 3 // f => 0.8, so 1d3 => 3
+	// flip := Tails // f => 0.9, prob[i-1] = 0.9
+	expected = 1
+	res = d.GenerateRandom(f)
+	if res != expected {
+		t.Errorf("Expected %v, got %v", expected, res)
+	}
 	t.Errorf("Not yet implemented")
 }
 
