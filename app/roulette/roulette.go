@@ -100,12 +100,14 @@ func NewLoadedDie(n int, ps []float64) (LoadedDie, error) {
 // http://www.keithschwarz.com/darts-dice-coins/
 func (d LoadedDie) GenerateRandom(f Floater) int {
 	alias, prob := voseInit(d)
-	i := NewFairDie(d.sides).GenerateRandom(f) // 1 to d.sides, so need to subtract 1 for indexing
-	flip := NewBiasedCoin(prob[i-1]).GenerateRandom(f)
+	// 1 to d.sides, so need to subtract 1 for indexing
+	side := NewFairDie(d.sides).GenerateRandom(f)
+	index := side - 1
+	flip := NewBiasedCoin(prob[index]).GenerateRandom(f)
 	if flip == Heads {
-		return i
+		return side
 	} //flip == Tails
-	return alias[i-1] + 1
+	return alias[index] + 1
 }
 
 func voseInit(d LoadedDie) (alias []int, prob []float64) {
