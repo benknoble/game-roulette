@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-// A Floater can provide a float64 on each invocation of it's method
+// A Floater can provide a float64 in [0.0,1.0) on each invocation of it's method
 type Floater interface {
 	Float64() float64
 }
@@ -74,7 +74,7 @@ func NewFairDie(n int) FairDie {
 // GenerateRandom an integer in the range [1,number of sides on the die]
 func (d FairDie) GenerateRandom(f Floater) int {
 	x := f.Float64()
-	return int(math.Floor(x * float64(d.sides)))
+	return int(math.Floor(x*float64(d.sides))) + 1
 }
 
 // A LoadedDie gives an integer in the range [1,number of sides] as a

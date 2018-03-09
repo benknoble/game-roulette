@@ -23,7 +23,6 @@ func newMockFloater() *mockFloater {
 		0.7,
 		0.8,
 		0.9,
-		1.0,
 	}
 	return &mockFloater{0, fs}
 }
@@ -68,7 +67,7 @@ func TestRandAsFloater(t *testing.T) {
 func TestFairCoin(t *testing.T) {
 	c := FairCoin{}
 	var f Floater = newMockFloater()
-	for i := 0; i <= 10; i++ {
+	for i := 0; i < 10; i++ {
 		heads := c.GenerateRandom(f)
 		var result int
 		if i < 5 {
@@ -85,7 +84,7 @@ func TestFairCoin(t *testing.T) {
 func TestBiasedCoin(t *testing.T) {
 	c := NewBiasedCoin(.3)
 	var f Floater = newMockFloater()
-	for i := 0; i <= 10; i++ {
+	for i := 0; i < 10; i++ {
 		heads := c.GenerateRandom(f)
 		var result int
 		if i < 3 {
@@ -102,9 +101,9 @@ func TestBiasedCoin(t *testing.T) {
 func TestFairDie(t *testing.T) {
 	d := NewFairDie(10)
 	var f Floater = newMockFloater()
-	for i := 0; i <= 10; i++ {
+	for i := 0; i < 10; i++ {
 		face := d.GenerateRandom(f)
-		result := i
+		result := i + 1
 		if face != result {
 			t.Errorf("Expected %v, got %v", result, face)
 		}
